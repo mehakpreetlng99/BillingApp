@@ -13,6 +13,8 @@ namespace BillingApp.Data
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Subcategory> Subcategories { get; set; }
+
 
         // Removing role seeding logic here and relying on DbSeeder.cs for seeding roles
         // If you want to seed roles, handle it inside DbSeeder.cs manually
