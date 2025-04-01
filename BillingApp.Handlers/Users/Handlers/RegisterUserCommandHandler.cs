@@ -22,6 +22,23 @@ namespace BillingApp.Handlers.Users.Handlers
         {
             try
             {
+                var existingUser = await _userManager.FindByEmailAsync(request.Email);
+                if (existingUser != null)
+                {
+                    _logger.LogWarning("User already exists.");
+                    return false; // Prevent duplicate user creation
+                }
+                var passwordValidator = _userManager.PasswordValidators.First();
+                var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, null, request.Password);
+                if (!passwordValidationResult.Succeeded)
+                {
+                    foreach (var error in passwordValidationResult.Errors)
+                    {
+                        _logger.LogWarning($"Password validation failed: {error.Description}");
+                    }
+                    return false; // Return false to indicate validation failure
+                }
+
                 var user = new User
                 {
                     UserName = request.Email,
@@ -33,7 +50,7 @@ namespace BillingApp.Handlers.Users.Handlers
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, request.Role); 
+                    await _userManager.AddToRoleAsync(user, request.Role);
                     _logger.LogInformation("User created successfully.");
                     return true;
                 }
@@ -47,6 +64,37 @@ namespace BillingApp.Handlers.Users.Handlers
                 throw;
             }
         }
-    }
 
+
+        //public async Task<bool> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+        //{
+        //    try
+        //    {
+        //        var user = new User
+        //        {
+        //            UserName = request.Email,
+        //            Email = request.Email,
+        //            FullName = request.FullName
+        //        };
+
+        //        var result = await _userManager.CreateAsync(user, request.Password);
+
+        //        if (result.Succeeded)
+        //        {
+        //            await _userManager.AddToRoleAsync(user, request.Role); 
+        //            _logger.LogInformation("User created successfully.");
+        //            return true;
+        //        }
+
+        //        _logger.LogWarning("User creation failed.");
+        //        return false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"Error in RegisterUserCommandHandler: {ex.Message}");
+        //        throw;
+        //    }
+    }
 }
+
+
