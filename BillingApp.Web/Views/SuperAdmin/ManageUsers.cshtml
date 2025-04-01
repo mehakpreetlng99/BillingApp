@@ -1,0 +1,38 @@
+﻿
+@model IEnumerable<BillingApp.DTO.UserDTO>
+
+<h2>Manage Users</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+                <td>
+                    <!-- Delete user button -->
+                    <form method="post" asp-action="DeleteUser" asp-route-userId="@user.Id" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <!-- Update user button -->
+                    <a href="@Url.Action("UpdateUser", "SuperAdmin", new { id = user.Id })" class="btn btn-warning">Update</a>
+                    <!-- View details button -->
+                    <a href="@Url.Action("GetUserById", "SuperAdmin", new { id = user.Id })" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Add a new user -->
+<a href="@Url.Action("RegisterUser", "SuperAdmin")" class="btn btn-primary">Register New User</a>

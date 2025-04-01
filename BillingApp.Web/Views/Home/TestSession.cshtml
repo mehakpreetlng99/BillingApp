@@ -1,0 +1,17 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "Test Session";
+}
+
+<h2>Test Session</h2>
+
+@if (!string.IsNullOrEmpty(Model))
+{
+    <p><strong>Stored Role:</strong> @Model</p>
+}
+else
+{
+    <p><strong>Session Role Not Found!</strong></p>
+}
+
