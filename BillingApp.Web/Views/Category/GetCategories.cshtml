@@ -1,0 +1,32 @@
+﻿@model IEnumerable<BillingApp.Models.Category>
+
+@{
+    ViewData["Title"] = "Manage Categories";
+}
+
+<h2>Manage Categories</h2>
+
+<a href="@Url.Action("Create", "Category")" class="btn btn-success mb-3">Add New Category</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Category Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Category", new { id = category.Id })" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="@Url.Action("Delete", "Category", new { id = category.Id })" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Back to Home</a>

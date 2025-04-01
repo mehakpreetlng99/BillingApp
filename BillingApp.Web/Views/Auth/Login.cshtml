@@ -1,17 +1,37 @@
 ﻿@{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Login - Billing System";
 }
 
-<h2>Login</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
 
-<form method="post">
-    <div>
-        <label>Email</label>
-        <input type="email" name="email" required />
+    <!-- Billing System Heading (over the login form) -->
+    <div class="app-heading">
+        <h1>Billing System</h1>
     </div>
-    <div>
-        <label>Password</label>
-        <input type="password" name="password" required />
+
+    <!-- Login Form -->
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="post" id="loginForm">
+            <div>
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter your email" required />
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter your password" required />
+            </div>
+            <button type="submit">Login</button>
+        </form>
     </div>
-    <button type="submit">Login</button>
-</form>
+
+</body>
+</html>

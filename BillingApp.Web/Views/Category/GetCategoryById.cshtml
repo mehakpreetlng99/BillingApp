@@ -1,0 +1,9 @@
+﻿@model BillingApp.DTO.CategoryDTO
+
+<h2>Category Details</h2>
+
+<div>
+    <strong>Category Name:</strong> @Model.Name
+</div>
+
+<a href="@Url.Action("GetCategories", "Category")" class="btn btn-secondary">Back to Categories</a>
