@@ -8,27 +8,29 @@ using Serilog;
 using MediatR;
 using BillingApp.Web.Middleware;
 using BillingApp.Handlers.Authentication.Handlers;
+using BillingApp.Handlers.Users.Handlers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//serilogger
+// Serilog configuration
 builder.Host.UseSerilog((context, config) =>
 {
     config.ReadFrom.Configuration(context.Configuration);
 });
 
-//database
+// Database connection
 builder.Services.AddDbContext<BillingDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//configure identity
+// Configure Identity
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<BillingDbContext>()
     .AddDefaultTokenProviders();
 
-//authentication
+// Authentication & Authorization
 builder.Services.AddAuthentication()
     .AddCookie("Cookies", options =>
     {
@@ -36,7 +38,14 @@ builder.Services.AddAuthentication()
         options.AccessDeniedPath = "/Auth/AccessDenied";
     });
 
-//session
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireSuperAdminRole", policy =>
+        policy.RequireRole("SuperAdmin"));
+});
+
+// Session Configuration
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -44,30 +53,16 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-});
-
-//mediators
-builder.Services.AddMediatR(typeof(Program).Assembly);
+// MediatR for CQRS
+builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).Assembly);
 builder.Services.AddMediatR(typeof(LoginUserHandler).Assembly);
 
-//sessions
-builder.Services.AddDistributedMemoryCache();
-
-//authorization
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("RequireSuperAdminRole", policy =>
-        policy.RequireRole("SuperAdmin"));
-});
-
 var app = builder.Build();
+
+// Seed SuperAdmin & Roles
 await DbSeeder.SeedRolesAndSuperAdmin(app.Services);
 
-// Configure the HTTP request pipeline.
+// Configure Middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -76,17 +71,112 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseSession(); // Ensure session is before authentication
+app.UseSerilogRequestLogging(); // Logging Middleware
+
+app.UseSession(); // Ensure session is initialized before authentication
 app.UseMiddleware<SessionRoleMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseSerilogRequestLogging();
 
+// Default Routing
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Auth}/{action=Login}/{id?}");
 
 app.Run();
+
+//using BillingApp.Data;
+//using BillingApp.Models;
+//using Microsoft.AspNetCore.Identity;
+//using Microsoft.EntityFrameworkCore;
+//using Microsoft.Extensions.DependencyInjection;
+//using Serilog;
+//using MediatR;
+//using BillingApp.Web.Middleware;
+//using BillingApp.Handlers.Authentication.Handlers;
+//var builder = WebApplication.CreateBuilder(args);
+
+//// Add services to the container.
+//builder.Services.AddControllersWithViews();
+
+////serilogger
+//builder.Host.UseSerilog((context, config) =>
+//{
+//    config.ReadFrom.Configuration(context.Configuration);
+//});
+
+////database
+//builder.Services.AddDbContext<BillingDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+////configure identity
+//builder.Services.AddIdentity<User, IdentityRole>()
+//    .AddEntityFrameworkStores<BillingDbContext>()
+//    .AddDefaultTokenProviders();
+
+////authentication
+//builder.Services.AddAuthentication()
+//    .AddCookie("Cookies", options =>
+//    {
+//        options.LoginPath = "/Auth/Login";
+//        options.AccessDeniedPath = "/Auth/AccessDenied";
+//    });
+
+////session
+//builder.Services.AddSession(options =>
+//{
+//    options.IdleTimeout = TimeSpan.FromMinutes(30);
+//    options.Cookie.HttpOnly = true;
+//    options.Cookie.IsEssential = true;
+//});
+
+//builder.Services.ConfigureApplicationCookie(options =>
+//{
+//    options.LoginPath = "/Account/Login";
+//    options.AccessDeniedPath = "/Account/AccessDenied";
+//});
+
+////mediators
+//builder.Services.AddMediatR(typeof(Program).Assembly);
+//builder.Services.AddMediatR(typeof(LoginUserHandler).Assembly);
+
+////sessions
+//builder.Services.AddDistributedMemoryCache();
+
+////authorization
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("RequireSuperAdminRole", policy =>
+//        policy.RequireRole("SuperAdmin"));
+//});
+
+//var app = builder.Build();
+//await DbSeeder.SeedRolesAndSuperAdmin(app.Services);
+
+//// Configure the HTTP request pipeline.
+//if (!app.Environment.IsDevelopment())
+//{
+//    app.UseExceptionHandler("/Home/Error");
+//    app.UseHsts();
+//}
+
+//app.UseHttpsRedirection();
+//app.UseStaticFiles();
+//app.UseSession(); // Ensure session is before authentication
+//app.UseMiddleware<SessionRoleMiddleware>();
+//app.UseAuthentication();
+//app.UseAuthorization();
+//app.UseSerilogRequestLogging();
+
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Auth}/{action=Login}/{id?}");
+
+//app.Run();
+
+
+
 
 //using BillingApp.Data;
 //using BillingApp.Models;
