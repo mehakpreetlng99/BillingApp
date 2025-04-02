@@ -32,8 +32,4 @@
     <ProjectReference Include="..\BillingApp.Models\BillingApp.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Products\" />
-  </ItemGroup>
-
 </Project>

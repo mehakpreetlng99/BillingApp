@@ -9,6 +9,7 @@ using MediatR;
 using BillingApp.Web.Middleware;
 using BillingApp.Handlers.Authentication.Handlers;
 using BillingApp.Handlers.Users.Handlers;
+using BillingApp.Handlers.Products.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +57,10 @@ builder.Services.AddSession(options =>
 // MediatR for CQRS
 builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).Assembly);
 builder.Services.AddMediatR(typeof(LoginUserHandler).Assembly);
+builder.Services.AddMediatR(typeof(GetProductByIdHandler).Assembly);
+//builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetProductByIdHandler).Assembly));
+
+
 
 var app = builder.Build();
 
