@@ -6,7 +6,7 @@
 
 <h2>Manage Categories</h2>
 
-<a href="@Url.Action("Create", "Category")" class="btn btn-success mb-3">Add New Category</a>
+<a href="@Url.Action("CreateCategory", "Category")" class="btn btn-success mb-3">Add New Category</a>
 
 <table class="table">
     <thead>
@@ -21,8 +21,13 @@
             <tr>
                 <td>@category.Name</td>
                 <td>
-                    <a href="@Url.Action("Edit", "Category", new { id = category.Id })" class="btn btn-primary btn-sm">Edit</a>
-                    <a href="@Url.Action("Delete", "Category", new { id = category.Id })" class="btn btn-danger btn-sm">Delete</a>
+                    <a href="@Url.Action("EditCategory", "Category", new { id = category.Id })" class="btn btn-primary btn-sm">Edit</a>
+                    <form asp-action="DeleteCategory" method="post">
+                        <input type="hidden" name="id" value="@category.Id" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    
+                   
                 </td>
             </tr>
         }

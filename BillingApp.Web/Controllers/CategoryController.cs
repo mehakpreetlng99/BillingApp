@@ -46,14 +46,14 @@ namespace BillingApp.Web.Controllers
         }
 
         // GET: Category/Edit/5
-        public IActionResult Edit(int id)
+        public IActionResult EditCategory(int id)
         {
             return View(new CategoryDTO { Id = id }); // Load existing category data (if needed)
         }
 
         // POST: Category/Edit/5
         [HttpPost]
-        public async Task<IActionResult> Edit(CategoryDTO model)
+        public async Task<IActionResult> EditCategory(CategoryDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +73,7 @@ namespace BillingApp.Web.Controllers
 
         // POST: Category/Delete/5
         [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteCategory(int id)
         {
             var result = await _mediator.Send(new DeleteCategoryCommand { Id = id });
 
