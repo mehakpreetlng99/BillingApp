@@ -30,7 +30,8 @@ namespace BillingApp.Handlers.Subcategories.Handlers
                 {
                     Id = s.Id,
                     Name = s.Name,
-                    CategoryId = s.CategoryId
+                    CategoryId = s.CategoryId,
+                    //CategoryName = s.Category != null ? s.Category.Name : "Unknown"
                 })
                 .ToListAsync(cancellationToken);
 

@@ -20,9 +20,19 @@ namespace BillingApp.Web.Controllers
         }
 
         // GET: /Subcategory
+        //public async Task<IActionResult> Index()
+        //{
+        //    var subcategories = await _mediator.Send(new GetSubcategoriesQuery());
+        //    return View(subcategories);
+        //}
         public async Task<IActionResult> Index()
         {
             var subcategories = await _mediator.Send(new GetSubcategoriesQuery());
+            var categories = await _mediator.Send(new GetCategoriesQuery());
+
+            // Store Category Names in ViewBag as Dictionary
+            ViewBag.CategoryMap = categories.ToDictionary(c => c.Id, c => c.Name);
+
             return View(subcategories);
         }
 
@@ -43,25 +53,49 @@ namespace BillingApp.Web.Controllers
         // POST: /Subcategory/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SubcategoryDTO subcategoryDto)
+        [HttpPost]
+        public async Task<IActionResult> Create(SubcategoryDTO model)
         {
             if (!ModelState.IsValid)
             {
-                return View(subcategoryDto);
+                // If model is invalid, return to the view with the existing categories
+                var categories = await _mediator.Send(new GetCategoriesQuery());
+                ViewBag.Categories = new SelectList(categories, "Id", "Name");
+                return View(model);
             }
-            var result = await _mediator.Send(new AddSubcategoryCommand(subcategoryDto));
 
+            // Your create logic
+            var result = await _mediator.Send(new AddSubcategoryCommand (model));
 
             if (result)
             {
-                _logger.LogInformation($"Subcategory '{subcategoryDto.Name}' created successfully.");
-                return RedirectToAction(nameof(Index));
+                _logger.LogInformation($"Subcategory with Name {model.Name} created successfully.");
+                return RedirectToAction("Index");
             }
 
-            _logger.LogWarning($"Failed to create subcategory '{subcategoryDto.Name}'.");
-            ModelState.AddModelError("", "Failed to create subcategory.");
-            return View(subcategoryDto);
+            _logger.LogWarning($"Failed to create subcategory with Name {model.Name}.");
+            return RedirectToAction("Index");
         }
+
+        //public async Task<IActionResult> Create(SubcategoryDTO subcategoryDto)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(subcategoryDto);
+        //    }
+        //    var result = await _mediator.Send(new AddSubcategoryCommand(subcategoryDto));
+
+
+        //    if (result)
+        //    {
+        //        _logger.LogInformation($"Subcategory '{subcategoryDto.Name}' created successfully.");
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    _logger.LogWarning($"Failed to create subcategory '{subcategoryDto.Name}'.");
+        //    ModelState.AddModelError("", "Failed to create subcategory.");
+        //    return View(subcategoryDto);
+        //}
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
