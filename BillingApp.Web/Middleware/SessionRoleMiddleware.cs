@@ -22,17 +22,28 @@ namespace BillingApp.Web.Middleware
             {
                 // Get the user's role from the claims
                 var role = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                var userId = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
                 if (!string.IsNullOrEmpty(role))
                 {
                     // Store the role in the session
                     context.Session.SetString("UserRole", role);
+
                     Console.WriteLine($"🔹 Role '{role}' stored in session.");
                 }
                 else
                 {
                     // Log a warning if no role is found in the claims
                     Console.WriteLine("⚠️ No role found in claims.");
+                }
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    context.Session.SetString("UserId", userId);
+                    Console.WriteLine($"🔹 User ID '{userId}' stored in session.");
+                }
+                else
+                {
+                    Console.WriteLine("⚠️ No User ID found in claims.");
                 }
             }
             else

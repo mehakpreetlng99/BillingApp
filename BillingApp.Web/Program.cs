@@ -10,6 +10,9 @@ using BillingApp.Web.Middleware;
 using BillingApp.Handlers.Authentication.Handlers;
 using BillingApp.Handlers.Users.Handlers;
 using BillingApp.Handlers.Products.Handlers;
+using BillingApp.Web.Services;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,12 @@ builder.Host.UseSerilog((context, config) =>
 {
     config.ReadFrom.Configuration(context.Configuration);
 });
+
+
+//pdf services
+//builder.Services.AddSingleton<IConverter, BasicConverter>();
+//builder.Services.AddSingleton<PdfService>();
+//builder.Services.AddSingleton<ViewRenderService>();
 
 // Database connection
 builder.Services.AddDbContext<BillingDbContext>(options =>

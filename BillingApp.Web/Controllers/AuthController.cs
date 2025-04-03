@@ -44,7 +44,7 @@ namespace BillingApp.Web.Controllers
                     }
                     if (role == "Agent")
                     {
-                        return RedirectToAction("Billing", "Billing");
+                        return RedirectToAction("CreateInvoice", "BillingTest");
                     }
 
                     return RedirectToAction("TestSession", "Home");

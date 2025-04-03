@@ -1,0 +1,191 @@
+﻿@using BillingApp.DTO
+@model BillingApp.DTO.InvoiceDTO
+
+@{
+    ViewData["Title"] = "Create Invoice";
+}
+
+<h2>Create Invoice</h2>
+
+<form id="billingForm" asp-action="Create" asp-controller="Billing" method="post">
+    <div class="form-group">
+        <label for="CustomerPhone">Customer Phone</label>
+        <input type="text" id="customerPhone" class="form-control" asp-for="CustomerPhone" placeholder="Enter phone number" required>
+    </div>
+
+    <div class="form-group">
+        <label for="CustomerName">Customer Name</label>
+        <input type="text" id="customerName" class="form-control" asp-for="CustomerName" placeholder="Enter the name" required >
+    </div>
+
+    <div class="form-group">
+        <label for="product">Product</label>
+        <select id="product" class="form-control" required>
+            <option value="">Select Product</option>
+            @if (ViewBag.Products != null)
+            {
+                @foreach (var product in ViewBag.Products as List<ProductDTO>)
+                {
+                    <option value="@product.Id" data-price="@product.Price">@product.Name</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="price">Price</label>
+        <input type="text" id="price" class="form-control" readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input type="number" id="quantity" class="form-control" min="1" value="1">
+    </div>
+
+    <div class="form-group">
+        <label for="subtotal">Subtotal</label>
+        <input type="text" id="subtotal" class="form-control" readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="gst">GST (%)</label>
+        <input type="number" id="gst" class="form-control" min="0" value="5">
+    </div>
+
+    <div class="form-group">
+        <label for="discount">Discount (%)</label>
+        <input type="number" id="discount" class="form-control" min="0" value="0">
+    </div>
+
+    <div class="form-group">
+        <label for="total">Total</label>
+        <input type="text" id="total" class="form-control" readonly>
+    </div>
+
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="CustomerId" />
+    <input type="hidden" asp-for="TotalAmount" />
+
+    <button type="submit" class="btn btn-success" asp-action="GenerateInvoice">Generate Invoice</button>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const productDropdown = document.getElementById("product");
+        const priceInput = document.getElementById("price");
+        const quantityInput = document.getElementById("quantity");
+        const subtotalInput = document.getElementById("subtotal");
+        const gstInput = document.getElementById("gst");
+        const discountInput = document.getElementById("discount");
+        const totalInput = document.getElementById("total");
+        const customerPhoneInput = document.getElementById("customerPhone");
+        const customerNameInput = document.getElementById("customerName");
+
+        function calculateTotal() {
+            let price = parseFloat(priceInput.value) || 0;
+            let quantity = parseInt(quantityInput.value) || 1;
+            let gst = parseFloat(gstInput.value) || 0;
+            let discount = parseFloat(discountInput.value) || 0;
+
+            let subtotal = price * quantity;
+            let gstAmount = (subtotal * gst) / 100;
+            let discountAmount = (subtotal * discount) / 100;
+            let total = subtotal + gstAmount - discountAmount;
+
+            subtotalInput.value = subtotal.toFixed(2);
+            totalInput.value = total.toFixed(2);
+        }
+
+        productDropdown.addEventListener("change", function () {
+            let selectedOption = productDropdown.options[productDropdown.selectedIndex];
+            let price = selectedOption.getAttribute("data-price");
+            priceInput.value = price;
+            calculateTotal();
+        });
+
+        quantityInput.addEventListener("input", calculateTotal);
+        gstInput.addEventListener("input", calculateTotal);
+        discountInput.addEventListener("input", calculateTotal);
+
+        customerPhoneInput.addEventListener("blur", function () {
+            let phone = customerPhoneInput.value.trim();
+            if (phone !== "") {
+                fetch(`/Billing/GetCustomerByPhone?phone=${phone}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.name) {
+                            customerNameInput.value = data.name;
+                        } else {
+                            customerNameInput.value = "";
+                        }
+                    })
+                    .catch(error => console.error("Error fetching customer:", error));
+            }
+        });
+
+        document.getElementById("billingForm").addEventListener("submit", function(event) {
+            console.log("Form submitted!");
+        });
+    });
+</script>
+
+
+
+
+
+
+@* <h2>Create Invoice</h2> *@
+
+@* <form asp-action="Create" method="post"> *@
+@*     <div class="form-group"> *@
+@*         <label for="CustomerPhone">Customer Phone</label> *@
+@*         <input type="text" class="form-control" asp-for="CustomerPhone" required /> *@
+@*     </div> *@
+
+@*     <div class="form-group"> *@
+@*         <label for="CustomerName">Customer Name (Optional, auto-filled if existing)</label> *@
+@*         <input type="text" class="form-control" asp-for="CustomerName" /> *@
+@*     </div> *@
+
+@*     <div class="form-group"> *@
+@*         <label>Products</label> *@
+@*         <table class="table"> *@
+@*             <thead> *@
+@*                 <tr> *@
+@*                     <th>Product</th> *@
+@*                     <th>Quantity</th> *@
+@*                     <th>Price</th> *@
+@*                 </tr> *@
+@*             </thead> *@
+@*             <tbody id="productTable"> *@
+@*                 <tr> *@
+@*                     <td><input type="text" name="Items[0].ProductName" class="form-control" required /></td> *@
+@*                     <td><input type="number" name="Items[0].Quantity" class="form-control" required min="1" /></td> *@
+@*                     <td><input type="number" name="Items[0].Price" class="form-control" required min="0" /></td> *@
+@*                 </tr> *@
+@*             </tbody> *@
+@*         </table> *@
+@*         <button type="button" id="addProduct" class="btn btn-success">Add Product</button> *@
+@*     </div> *@
+
+@*     <div class="form-group"> *@
+@*         <label for="TotalAmount">Total Amount</label> *@
+@*         <input type="text" class="form-control" asp-for="TotalAmount" readonly /> *@
+@*     </div> *@
+
+@*     <button type="submit" class="btn btn-primary">Generate Invoice</button> *@
+@* </form> *@
+
+@* @section Scripts { *@
+@*     <script> *@
+@*         document.getElementById("addProduct").addEventListener("click", function () { *@
+@*             var index = document.querySelectorAll("#productTable tr").length; *@
+@*             var row = `<tr> *@
+@*                         <td><input type="text" name="Items[${index}].ProductName" class="form-control" required /></td> *@
+@*                         <td><input type="number" name="Items[${index}].Quantity" class="form-control" required min="1" /></td> *@
+@*                         <td><input type="number" name="Items[${index}].Price" class="form-control" required min="0" /></td> *@
+@*                     </tr>`; *@
+@*             document.getElementById("productTable").insertAdjacentHTML("beforeend", row); *@
+@*         }); *@
+@*     </script> *@
+@* } *@

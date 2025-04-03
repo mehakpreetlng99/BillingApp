@@ -1,0 +1,61 @@
+﻿@model BillingApp.DTO.InvoiceDTO
+
+@{
+    ViewData["Title"] = "Billing";
+}
+
+<h2>Billing</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="CustomerPhone">Customer Phone</label>
+        <input type="text" id="CustomerPhone" name="CustomerPhone" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="CustomerName">Customer Name</label>
+        <input type="text" id="CustomerName" name="CustomerName" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Product">Product</label>
+        <select id="Product" name="ProductId" class="form-control">
+            @foreach (var product in ViewBag.Products)
+            {
+                <option value="@product.Id">@product.Name - $@product.Price</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="Quantity">Quantity</label>
+        <input type="number" id="Quantity" name="Quantity" class="form-control" min="1" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Add to Invoice</button>
+</form>
+
+<h3>Invoice</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model?.Items != null)
+        {
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>$@item.Price</td>
+                    <td>$@(item.Quantity * item.Price)</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<h4>Total Amount: $@Model?.TotalAmount</h4>
+
+<a href="@Url.Action("DownloadInvoice", "Billing", new { invoiceId = Model?.Id })" class="btn btn-success">Download Invoice as PDF</a>

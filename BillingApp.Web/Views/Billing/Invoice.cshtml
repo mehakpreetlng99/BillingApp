@@ -1,0 +1,41 @@
+﻿@model BillingApp.DTO.InvoiceDTO
+
+@{
+    ViewData["Title"] = "Invoice";
+}
+
+<h2>Invoice #@Model.Id</h2>
+
+<div>
+    <p><strong>Customer :</strong> @Model.CustomerName</p>
+    <p><strong>Phone Number:</strong> @Model.CustomerPhone</p>
+    @* <p><strong>Agent ID:</strong> @Model.AgentId</p>  *@
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.Quantity</td>
+                <td>@item.Price</td>
+                <td>@(item.Quantity * item.Price)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h4>Total Amount: $@Model.TotalAmount</h4>
+
+<a href="@Url.Action("DownloadPDF", "Billing", new { id = Model.Id })" class="btn btn-primary">
+    Download PDF
+</a>
