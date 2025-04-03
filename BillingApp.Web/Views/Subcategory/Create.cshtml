@@ -4,26 +4,79 @@
     ViewData["Title"] = "Create Subcategory";
 }
 
-<h2>Create Subcategory</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-plus-circle me-2"></i> Create Subcategory</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Subcategory Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter subcategory name" required />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Name" class="control-label">Subcategory Name</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="CategoryId" class="form-label">Category</label>
+                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
+                                <option value="">-- Select Category --</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check-circle me-2"></i> Create Subcategory
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i> Back to List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="CategoryId" class="control-label">Category</label>
-        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
-            <option value="">-- Select Category --</option>
-        </select>
-        <span asp-validation-for="CategoryId" class="text-danger"></span>
-    </div>
+@section Scripts {
+    <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+}
 
-    <button type="submit" class="btn btn-success">Create Subcategory</button>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-</form>
+
+@* @model BillingApp.DTO.SubcategoryDTO *@
+
+@* @{ *@
+@*     ViewData["Title"] = "Create Subcategory"; *@
+@* } *@
+
+@* <h2>Create Subcategory</h2> *@
+
+@* <form asp-action="Create" method="post"> *@
+@*     <div class="form-group"> *@
+@*         <label asp-for="Name" class="control-label">Subcategory Name</label> *@
+@*         <input asp-for="Name" class="form-control" /> *@
+@*         <span asp-validation-for="Name" class="text-danger"></span> *@
+@*     </div> *@
+
+@*     <div class="form-group"> *@
+@*         <label asp-for="CategoryId" class="control-label">Category</label> *@
+@*         <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"> *@
+@*             <option value="">-- Select Category --</option> *@
+@*         </select> *@
+@*         <span asp-validation-for="CategoryId" class="text-danger"></span> *@
+@*     </div> *@
+
+@*     <button type="submit" class="btn btn-success">Create Subcategory</button> *@
+@*     <a asp-action="Index" class="btn btn-secondary">Back to List</a> *@
+@* </form> *@
+
+
+
+
 
 @* @model BillingApp.DTO.SubcategoryDTO *@
 

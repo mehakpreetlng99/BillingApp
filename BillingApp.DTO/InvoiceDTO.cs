@@ -20,7 +20,18 @@ namespace BillingApp.DTO
 
         public decimal TotalAmount { get; set; }
 
-        
+        [Range(0, 100)]
+        public decimal? DiscountPercentage { get; set; }  
+
+        public decimal? DiscountAmount { get; set; }     
+
+        [Range(0, 100)]
+        public decimal? GSTPercentage { get; set; }      
+
+        public decimal? GSTAmount { get; set; }          
+
+        public decimal? Subtotal { get; set; }
+
         //public string AgentId { get; set; }
 
         public List<InvoiceItemDTO> Items { get; set; } = new List<InvoiceItemDTO>();

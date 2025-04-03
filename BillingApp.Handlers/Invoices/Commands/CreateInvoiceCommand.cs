@@ -21,6 +21,9 @@ namespace BillingApp.Handlers.Invoices.Commands
         [Required(ErrorMessage = "Customer phone is required")]
         public string CustomerPhone { get; set; }
 
+        public decimal? DiscountPercentage { get; set; }
+        public decimal?  GSTPercentage{get;set;}
+
         [Required(ErrorMessage = "Customer name is required")]
         public string CustomerName { get; set; }
 

@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingApp.Handlers", "Bill
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingApp.DTO", "BillingApp.DTO\BillingApp.DTO.csproj", "{23611DF6-6774-4D71-B06C-856EB9E43CEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingApp.Common", "BillingApp.Common\BillingApp.Common.csproj", "{4D9C5E21-298F-45E5-B831-E2DB2867B380}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingMap.Mappings", "BillingMap.Mappings\BillingMap.Mappings.csproj", "{BB2CFF8E-797E-47CE-8C18-0D496AACCE15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{23611DF6-6774-4D71-B06C-856EB9E43CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23611DF6-6774-4D71-B06C-856EB9E43CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23611DF6-6774-4D71-B06C-856EB9E43CEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D9C5E21-298F-45E5-B831-E2DB2867B380}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D9C5E21-298F-45E5-B831-E2DB2867B380}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D9C5E21-298F-45E5-B831-E2DB2867B380}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D9C5E21-298F-45E5-B831-E2DB2867B380}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB2CFF8E-797E-47CE-8C18-0D496AACCE15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB2CFF8E-797E-47CE-8C18-0D496AACCE15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB2CFF8E-797E-47CE-8C18-0D496AACCE15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB2CFF8E-797E-47CE-8C18-0D496AACCE15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

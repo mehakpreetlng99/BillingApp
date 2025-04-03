@@ -1,41 +1,155 @@
 ﻿@model BillingApp.DTO.UserDTO
 
-<h2>Update User</h2>
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary fw-bold">
+        <i class="fas fa-user-edit me-2"></i> Update User
+    </h2>
 
-<form method="post">
-    <div class="form-group">
-        <label for="FullName">Full Name</label>
-        <input type="text" class="form-control" id="FullName" name="FullName" value="@Model.FullName" required />
+    <!-- Card wrapper for the form -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post" asp-action="UpdateUser" asp-controller="SuperAdmin">
+                <!-- Hidden ID field to track the user being updated -->
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label for="FullName" class="form-label fw-semibold">
+                        <i class="fas fa-user me-1"></i> Full Name
+                    </label>
+                    <input type="text" class="form-control" id="FullName" name="FullName" 
+                           value="@Model.FullName" required 
+                           placeholder="Enter full name" />
+                    <div class="invalid-feedback">
+                        Please enter a valid full name.
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="Email" class="form-label fw-semibold">
+                        <i class="fas fa-envelope me-1"></i> Email
+                    </label>
+                    <input type="email" class="form-control" id="Email" name="Email" 
+                           value="@Model.Email" required 
+                           placeholder="Enter email address" />
+                    <div class="invalid-feedback">
+                        Please enter a valid email address.
+                    </div>
+                </div>
+
+                <!-- Role -->
+                <div class="mb-4">
+                    <label for="Role" class="form-label fw-semibold">
+                        <i class="fas fa-shield-alt me-1"></i> Role
+                    </label>
+                    @* <select class="form-select" id="Role" name="Role" required> *@
+                    @*     <option value="" disabled @(string.IsNullOrEmpty(Model.Role) ? "selected" : "")>Select a role</option> *@
+                    @*     <option value="Admin" @(Model.Role == "Admin" ? "selected" : "")>Admin</option> *@
+                    @*     <option value="Agent" @(Model.Role == "Agent" ? "selected" : "")>Agent</option> *@
+                    @* </select> *@
+                    <select class="form-select" id="Role" name="Role" required>
+                        @if (string.IsNullOrEmpty(Model.Role))
+                        {
+                            <option value="" disabled selected>Select a role</option>
+                        }
+                        else
+                        {
+                            <option value="" disabled>Select a role</option>
+                        }
+                        @{
+                            var roles = new[] { "Admin", "Agent" };
+                            foreach (var role in roles)
+                            {
+                                if (role == Model.Role)
+                                {
+                                    <option value="@role" selected>@role</option>
+                                }
+                                else
+                                {
+                                    <option value="@role">@role</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select a role.
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i> Save Changes
+                    </button>
+                    <a href="@Url.Action("ManageUsers", "SuperAdmin")" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="Email">Email</label>
-        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
-    </div>
-    <div class="form-group">
-        <label for="Role">Role</label>
-        <select class="form-control" id="Role" name="Role" required>
-            @if (Model.Role == "Admin")
-            {
-                <option value="Admin" selected>Admin</option>
-            }
-            else
-            {
-                <option value="Admin">Admin</option>
-            }
+</div>
 
-            @if (Model.Role == "Agent")
-            {
-                <option value="Agent" selected>Agent</option>
-            }
-            else
-            {
-                <option value="Agent">Agent</option>
-            }
-        </select>
-    </div>
+<!-- Client-side validation script -->
+@section Scripts {
+    <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('form');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+}
 
-    <button type="submit" class="btn btn-success">Save Changes</button>
-</form>
 
-<!-- Cancel and go back to Manage Users -->
-<a href="@Url.Action("ManageUsers", "SuperAdmin")" class="btn btn-secondary">Cancel</a>
+@* @model BillingApp.DTO.UserDTO *@
+
+@* <h2>Update User</h2> *@
+
+@* <form method="post"> *@
+@*     <div class="form-group"> *@
+@*         <label for="FullName">Full Name</label> *@
+@*         <input type="text" class="form-control" id="FullName" name="FullName" value="@Model.FullName" required /> *@
+@*     </div> *@
+@*     <div class="form-group"> *@
+@*         <label for="Email">Email</label> *@
+@*         <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required /> *@
+@*     </div> *@
+@*     <div class="form-group"> *@
+@*         <label for="Role">Role</label> *@
+@*         <select class="form-control" id="Role" name="Role" required> *@
+@*             @if (Model.Role == "Admin") *@
+@*             { *@
+@*                 <option value="Admin" selected>Admin</option> *@
+@*             } *@
+@*             else *@
+@*             { *@
+@*                 <option value="Admin">Admin</option> *@
+@*             } *@
+
+@*             @if (Model.Role == "Agent") *@
+@*             { *@
+@*                 <option value="Agent" selected>Agent</option> *@
+@*             } *@
+@*             else *@
+@*             { *@
+@*                 <option value="Agent">Agent</option> *@
+@*             } *@
+@*         </select> *@
+@*     </div> *@
+
+@*     <button type="submit" class="btn btn-success">Save Changes</button> *@
+@* </form> *@
+
+@* <!-- Cancel and go back to Manage Users --> *@
+@* <a href="@Url.Action("ManageUsers", "SuperAdmin")" class="btn btn-secondary">Cancel</a> *@

@@ -1,3 +1,19 @@
-﻿<h2>No Categories Found</h2>
-<p>It looks like there are no categories in the system.</p>
-<a href="@Url.Action("CreateCategory", "Category")" class="btn btn-primary">Create New Category</a>
+﻿
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="text-center">
+        <h2 class="text-muted"><i class="fas fa-folder-open me-2"></i> No Categories Found</h2>
+        <p class="lead">It looks like there are no categories in the system.</p>
+
+        <a href="@Url.Action("CreateCategory", "Category")" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i> Create New Category
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+}
+
+@* <h2>No Categories Found</h2> *@
+@* <p>It looks like there are no categories in the system.</p> *@
+@* <a href="@Url.Action("CreateCategory", "Category")" class="btn btn-primary">Create New Category</a> *@

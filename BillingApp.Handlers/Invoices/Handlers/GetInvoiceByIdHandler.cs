@@ -23,10 +23,10 @@ namespace BillingApp.Handlers.Invoices.Handlers
         public async Task<InvoiceDTO> Handle(GetInvoiceByIdQuery request, CancellationToken cancellationToken)
         {
             var invoice = await _context.Invoices
-                .Include(i => i.Customer)  // Explicitly include Customer
+                .Include(i => i.Customer)
                 .Include(i => i.Items)
-                    .ThenInclude(ii => ii.Product)  // Include Product for each Item
-                .AsNoTracking()  // Better for read-only operations
+                    .ThenInclude(ii => ii.Product)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.Id == request.InvoiceId, cancellationToken);
 
             if (invoice == null)
@@ -34,7 +34,6 @@ namespace BillingApp.Handlers.Invoices.Handlers
                 return null;
             }
 
-            // Safely handle null Customer
             var customerName = invoice.Customer?.Name ?? "Unknown Customer";
             var customerPhone = invoice.Customer?.PhoneNumber ?? "N/A";
 
@@ -45,18 +44,66 @@ namespace BillingApp.Handlers.Invoices.Handlers
                 CustomerName = customerName,
                 CustomerPhone = customerPhone,
                 TotalAmount = invoice.TotalAmount,
-                Date = invoice.Date,  // Make sure your DTO has this property
+                Date = invoice.Date,
+                Subtotal = invoice.Subtotal,
+                DiscountPercentage = invoice.DiscountPercentage,
+                DiscountAmount = invoice.DiscountAmount,
+                GSTPercentage = invoice.GSTPercentage,
+                GSTAmount = invoice.GSTAmount,
                 Items = invoice.Items?.Select(ii => new InvoiceItemDTO
                 {
                     ProductId = ii.ProductId,
                     ProductName = ii.Product?.Name ?? "Unknown Product",
                     Quantity = ii.Quantity,
-                    Price = ii.Price,
-  // Added calculated field
-                }).ToList() ?? new List<InvoiceItemDTO>()  // Handle null Items
+                    Price = ii.Price
+                }).ToList() ?? new List<InvoiceItemDTO>()
             };
         }
     }
+
+        //      public async Task<InvoiceDTO> Handle(GetInvoiceByIdQuery request, CancellationToken cancellationToken)
+        //      {
+        //          var invoice = await _context.Invoices
+        //              .Include(i => i.Customer)  // Explicitly include Customer
+        //              .Include(i => i.Items)
+        //                  .ThenInclude(ii => ii.Product)  // Include Product for each Item
+        //              .AsNoTracking()  // Better for read-only operations
+        //              .FirstOrDefaultAsync(i => i.Id == request.InvoiceId, cancellationToken);
+
+        //          if (invoice == null)
+        //          {
+        //              return null;
+        //          }
+
+        //          // Safely handle null Customer
+        //          var customerName = invoice.Customer?.Name ?? "Unknown Customer";
+        //          var customerPhone = invoice.Customer?.PhoneNumber ?? "N/A";
+
+        //          return new InvoiceDTO
+        //          {
+        //              Id = invoice.Id,
+        //              CustomerId = invoice.CustomerId,
+        //              CustomerName = customerName,
+        //              CustomerPhone = customerPhone,
+        //              TotalAmount = invoice.TotalAmount,
+        //              Date = invoice.Date,  // Make sure your DTO has this property
+        //              Items = invoice.Items?.Select(ii => new InvoiceItemDTO
+        //              {
+        //                  ProductId = ii.ProductId,
+        //                  ProductName = ii.Product?.Name ?? "Unknown Product",
+        //                  Quantity = ii.Quantity,
+        //                  Price = ii.Price,
+        //// Added calculated field
+        //              }).ToList() ?? new List<InvoiceItemDTO>()  // Handle null Items
+        //          };
+        //      }
+        //  }
+
+
+
+
+
+
         //public async Task<InvoiceDTO> Handle(GetInvoiceByIdQuery request, CancellationToken cancellationToken)
         //{
         //        var invoice = await _context.Invoices

@@ -40,7 +40,7 @@ namespace BillingApp.Web.Controllers
                     }
                     if (role == "Admin")
                     {
-                        return RedirectToAction("GetCategories", "Category");
+                        return RedirectToAction("Index", "Admin");
                     }
                     if (role == "Agent")
                     {

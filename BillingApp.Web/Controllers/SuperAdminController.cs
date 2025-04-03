@@ -1,4 +1,6 @@
-﻿using BillingApp.DTO;
+﻿using BillingApp.Common.Constants;
+using System.Security.Claims;
+using BillingApp.DTO;
 using BillingApp.Handlers.Users.Commands;
 using BillingApp.Handlers.Users.Queries;
 using MediatR;
@@ -19,6 +21,12 @@ namespace BillingApp.Web.Controllers
         public SuperAdminController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -88,6 +96,33 @@ namespace BillingApp.Web.Controllers
             }
 
             return View(model);
+        }
+        public async Task<IActionResult> ManageAgents()
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var query = new GetUsersByRoleQuery
+            {
+                Role = UserRoles.Agent,
+                RequestingUserId = currentUserId,
+                RequestingUserRole = UserRoles.SuperAdmin
+            };
+
+            var agents = await _mediator.Send(query);
+            return View(agents);
+        }
+        
+        public async Task<IActionResult> ManageAdmins()
+        {
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var query = new GetUsersByRoleQuery
+            {
+                Role = UserRoles.Admin,
+                RequestingUserId = currentUserId,
+                RequestingUserRole = UserRoles.SuperAdmin
+            };
+
+            var admins = await _mediator.Send(query);
+            return View(admins);
         }
 
         //public async Task<IActionResult> RegisterUser(UserDTO model)
@@ -198,10 +233,7 @@ namespace BillingApp.Web.Controllers
             return View(user);
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+       
     }
 
 

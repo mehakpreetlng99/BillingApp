@@ -1,13 +1,40 @@
-﻿
-@model BillingApp.DTO.UserDTO
+﻿@model BillingApp.DTO.UserDTO
 
-<h2>User Details</h2>
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary fw-bold">
+        <i class="fas fa-user me-2"></i> User Details
+    </h2>
 
-<div>
-    <h4>Full Name: @Model.FullName</h4>
-    <p>Email: @Model.Email</p>
-    <p>Role: @Model.Role</p>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (Model != null)
+            {
+                <h4 class="card-title">Full Name: @(Model.FullName ?? "N/A")</h4>
+                <p class="card-text">Email: @(Model.Email ?? "N/A")</p>
+                <p class="card-text">Role: @(Model.Role ?? "N/A")</p>
+            }
+            else
+            {
+                <p class="text-danger">No user details available.</p>
+            }
+
+            <!-- Back to Manage Users -->
+            <a href="@Url.Action("ManageUsers", "SuperAdmin")" class="btn btn-secondary mt-3">
+                <i class="fas fa-arrow-left me-2"></i> Back to Users
+            </a>
+        </div>
+    </div>
 </div>
 
-<!-- Back to Manage Users -->
-<a href="@Url.Action("ManageUsers", "SuperAdmin")" class="btn btn-secondary">Back to Users</a>
+@* @model BillingApp.DTO.UserDTO *@
+
+@* <h2>User Details</h2> *@
+
+@* <div> *@
+@*     <h4>Full Name: @Model.FullName</h4> *@
+@*     <p>Email: @Model.Email</p> *@
+@*     <p>Role: @Model.Role</p> *@
+@* </div> *@
+
+@* <!-- Back to Manage Users --> *@
+@* <a href="@Url.Action("ManageUsers", "SuperAdmin")" class="btn btn-secondary">Back to Users</a> *@

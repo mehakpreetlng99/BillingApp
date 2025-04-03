@@ -1,10 +1,12 @@
-﻿using BillingApp.DTO;
+﻿using BillingApp.Data;
+using BillingApp.DTO;
 using BillingApp.Handlers.Categories.Queries;
 using BillingApp.Handlers.Subcategories.Commands;
 using BillingApp.Handlers.Subcategories.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace BillingApp.Web.Controllers
 {
@@ -12,11 +14,13 @@ namespace BillingApp.Web.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<SubcategoryController> _logger;
+        private readonly BillingDbContext _context;
 
-        public SubcategoryController(IMediator mediator, ILogger<SubcategoryController> logger)
+        public SubcategoryController(IMediator mediator, ILogger<SubcategoryController> logger, BillingDbContext context)
         {
             _mediator = mediator;
             _logger = logger;
+            _context=context;
         }
 
         // GET: /Subcategory
@@ -172,16 +176,49 @@ namespace BillingApp.Web.Controllers
         //}
 
         [HttpGet]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var subcategory = await _mediator.Send(new GetSubcategoryByIdQuery { Id = id });
+        //    if (subcategory == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(subcategory);
+        //}
+        [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var subcategory = await _mediator.Send(new GetSubcategoryByIdQuery { Id = id });
+            var subcategory = await _context.Subcategories
+                .Where(s => s.Id == id)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.Name,
+                    CategoryName = _context.Categories
+                        .Where(c => c.Id == s.CategoryId)
+                        .Select(c => c.Name)
+                        .FirstOrDefault() // Fetch CategoryName first before DTO projection
+                })
+                .FirstOrDefaultAsync(); // Call async method before DTO mapping
+
             if (subcategory == null)
             {
                 return NotFound();
             }
 
-            return View(subcategory);
+            // Convert to DTO
+            var subcategoryDTO = new SubcategoryDTO
+            {
+                Id = subcategory.Id,
+                Name = subcategory.Name,
+                CategoryName = subcategory.CategoryName
+            };
+
+            return View(subcategoryDTO);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

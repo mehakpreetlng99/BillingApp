@@ -13,6 +13,7 @@ using BillingApp.Handlers.Products.Handlers;
 using BillingApp.Web.Services;
 using DinkToPdf.Contracts;
 using DinkToPdf;
+using BillingApp.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,8 @@ builder.Services.AddSession(options =>
 });
 
 // MediatR for CQRS
+builder.Services.AddAutoMapper(typeof(MappingProfile)); // Or your mapping profile
+builder.Services.AddMediatR (typeof(GetUsersByRoleQueryHandler).Assembly);
 builder.Services.AddMediatR(typeof(RegisterUserCommandHandler).Assembly);
 builder.Services.AddMediatR(typeof(LoginUserHandler).Assembly);
 builder.Services.AddMediatR(typeof(GetProductByIdHandler).Assembly);

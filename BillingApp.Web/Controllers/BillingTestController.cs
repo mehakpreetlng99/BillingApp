@@ -24,7 +24,7 @@ namespace BillingApp.Web.Controllers
         }
 
 
-        [HttpPost]
+        
         [HttpPost]
         public async Task<IActionResult> CreateInvoice([FromForm] CreateInvoiceCommand command)
         {
@@ -54,23 +54,8 @@ namespace BillingApp.Web.Controllers
             // Redirect to Invoice View
             return RedirectToAction("InvoiceDetails", new { id = invoiceId });
         }
-        //public async Task<IActionResult> CreateInvoice([FromForm] CreateInvoiceCommand command)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-        //        {
-        //            Console.WriteLine($"Validation Error: {error.ErrorMessage}");
-        //        }
-        //        return View(command.Invoice); // Return the form with validation errors
-        //    }
-
-        //    // Call CreateInvoiceHandler via Mediator
-        //    int invoiceId = await _mediator.Send(command);
-
-        //    // Redirect to Invoice View
-        //    return RedirectToAction("InvoiceDetails", new { id = invoiceId });
-        //}
+        
+       
 
         [HttpGet]
         public async Task<IActionResult> InvoiceDetails(int id)
