@@ -17,7 +17,6 @@ namespace BillingApp.Handlers.Products.Handlers
             _context = context;
             _logger = logger;
         }
-
         public async Task<bool> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
             var product = await _context.Products.FindAsync(request.Product.Id);
@@ -27,10 +26,12 @@ namespace BillingApp.Handlers.Products.Handlers
                 return false;
             }
 
+       
             product.Name = request.Product.Name;
             product.Price = request.Product.Price;
             product.Quantity = request.Product.Quantity;
             product.SubcategoryId = request.Product.SubcategoryId;
+            product.IsActive = request.Product.Quantity > 0;
 
             var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
@@ -39,5 +40,6 @@ namespace BillingApp.Handlers.Products.Handlers
 
             return result;
         }
+     
     }
 }

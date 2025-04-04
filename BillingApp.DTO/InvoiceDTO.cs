@@ -39,17 +39,8 @@ namespace BillingApp.DTO
         public DateTime Date { get; set; }
         public List<ProductDTO> Products { get; set; } = new List<ProductDTO>();
         
-
-        //public int Id { get; set; }
-        //public string CustomerPhone { get; set; }
         public int CustomerId { get; set; }
-        //public string CustomerName { get; set; }
-        //public string PhoneNumber { get; set; }
-        //public decimal TotalAmount { get; set; }
-        //public int AgentId { get; set; }
-        //public List<InvoiceItemDTO> Items { get; set; }
-        //public DateTime Date { get; set; }
-        //public List<ProductDTO> Products { get; set; } = new List<ProductDTO>();
+        
     }
 
     }

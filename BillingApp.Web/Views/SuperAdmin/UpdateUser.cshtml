@@ -43,11 +43,7 @@
                     <label for="Role" class="form-label fw-semibold">
                         <i class="fas fa-shield-alt me-1"></i> Role
                     </label>
-                    @* <select class="form-select" id="Role" name="Role" required> *@
-                    @*     <option value="" disabled @(string.IsNullOrEmpty(Model.Role) ? "selected" : "")>Select a role</option> *@
-                    @*     <option value="Admin" @(Model.Role == "Admin" ? "selected" : "")>Admin</option> *@
-                    @*     <option value="Agent" @(Model.Role == "Agent" ? "selected" : "")>Agent</option> *@
-                    @* </select> *@
+                    
                     <select class="form-select" id="Role" name="Role" required>
                         @if (string.IsNullOrEmpty(Model.Role))
                         {
@@ -112,44 +108,3 @@
 }
 
 
-@* @model BillingApp.DTO.UserDTO *@
-
-@* <h2>Update User</h2> *@
-
-@* <form method="post"> *@
-@*     <div class="form-group"> *@
-@*         <label for="FullName">Full Name</label> *@
-@*         <input type="text" class="form-control" id="FullName" name="FullName" value="@Model.FullName" required /> *@
-@*     </div> *@
-@*     <div class="form-group"> *@
-@*         <label for="Email">Email</label> *@
-@*         <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required /> *@
-@*     </div> *@
-@*     <div class="form-group"> *@
-@*         <label for="Role">Role</label> *@
-@*         <select class="form-control" id="Role" name="Role" required> *@
-@*             @if (Model.Role == "Admin") *@
-@*             { *@
-@*                 <option value="Admin" selected>Admin</option> *@
-@*             } *@
-@*             else *@
-@*             { *@
-@*                 <option value="Admin">Admin</option> *@
-@*             } *@
-
-@*             @if (Model.Role == "Agent") *@
-@*             { *@
-@*                 <option value="Agent" selected>Agent</option> *@
-@*             } *@
-@*             else *@
-@*             { *@
-@*                 <option value="Agent">Agent</option> *@
-@*             } *@
-@*         </select> *@
-@*     </div> *@
-
-@*     <button type="submit" class="btn btn-success">Save Changes</button> *@
-@* </form> *@
-
-@* <!-- Cancel and go back to Manage Users --> *@
-@* <a href="@Url.Action("ManageUsers", "SuperAdmin")" class="btn btn-secondary">Cancel</a> *@

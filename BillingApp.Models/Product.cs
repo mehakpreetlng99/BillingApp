@@ -13,9 +13,9 @@ namespace BillingApp.Models
         public decimal Price { get; set; }
         public int Quantity { get; set; }
 
-        // Foreign Key
+        public  bool? IsActive { get; set; }
         public int SubcategoryId { get; set; }
-        public Subcategory Subcategory { get; set; } // Navigation Property
+        public Subcategory Subcategory { get; set; } 
     }
 
 }

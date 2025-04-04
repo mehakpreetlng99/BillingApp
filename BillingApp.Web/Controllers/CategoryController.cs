@@ -19,13 +19,13 @@ namespace BillingApp.Web.Controllers
             _logger = logger;
         }
 
-        // GET: Category/Create
+       
         public IActionResult CreateCategory()
         {
             return View(new CategoryDTO());
         }
 
-        // POST: Category/Create
+       
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CategoryDTO model)
         {
@@ -35,8 +35,10 @@ namespace BillingApp.Web.Controllers
 
                 if (result)
                 {
+                    TempData["AlertMessage"] = "Category Added Sucessfully!";
+                    TempData["AlertType"] = "success";
                     _logger.LogInformation("Category created successfully.");
-                    return RedirectToAction("GetCategories"); // Redirect to category list
+                    return RedirectToAction("GetCategories"); 
                 }
 
                 ModelState.AddModelError("", "Category creation failed.");
@@ -45,13 +47,13 @@ namespace BillingApp.Web.Controllers
             return View(model);
         }
 
-        // GET: Category/Edit/5
+       
         public IActionResult EditCategory(int id)
         {
-            return View(new CategoryDTO { Id = id }); // Load existing category data (if needed)
+            return View(new CategoryDTO { Id = id });
         }
 
-        // POST: Category/Edit/5
+        
         [HttpPost]
         public async Task<IActionResult> EditCategory(CategoryDTO model)
         {
@@ -61,6 +63,8 @@ namespace BillingApp.Web.Controllers
 
                 if (result)
                 {
+                    TempData["AlertMessage"] = "Category edited successfully!";
+                    TempData["AlertType"] = "success";
                     _logger.LogInformation($"Category with ID {model.Id} updated successfully.");
                     return RedirectToAction("GetCategories");
                 }
@@ -71,7 +75,7 @@ namespace BillingApp.Web.Controllers
             return View(model);
         }
 
-        // POST: Category/Delete/5
+       
         [HttpPost]
         public async Task<IActionResult> DeleteCategory(int id)
         {
@@ -79,6 +83,8 @@ namespace BillingApp.Web.Controllers
 
             if (result)
             {
+                TempData["AlertMessage"] = "Category Deleted successfully!";
+                TempData["AlertType"] = "success";
                 _logger.LogInformation($"Category with ID {id} deleted successfully.");
                 return RedirectToAction("GetCategories");
             }
@@ -92,7 +98,7 @@ namespace BillingApp.Web.Controllers
 
             if (category == null)
             {
-                // Handle not found
+                
                 return NotFound();
             }
 
@@ -102,17 +108,17 @@ namespace BillingApp.Web.Controllers
                 Name = category.Name
             };
 
-            return View(categoryDTO); // return a view with the category details
+            return View(categoryDTO); 
         }
 
-        // Get all categories
+        
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _mediator.Send(new GetCategoriesQuery());
 
             if (categories.Count == 0)
             {
-                // Handle no categories found
+             
                 return View("NoCategoriesFound");
             }
 
@@ -122,7 +128,7 @@ namespace BillingApp.Web.Controllers
                 Name = category.Name
             });
 
-            return View(categoryDTOs); // Return all categories to the view
+            return View(categoryDTOs); 
         }
         public IActionResult NoCategoriesFound()
         {

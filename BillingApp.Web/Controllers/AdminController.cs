@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BillingApp.Web.Controllers
 {
-    // Controllers/AdminController.cs
+    
     [Authorize(Roles = UserRoles.Admin)]
     public class AdminController : Controller
     {
@@ -13,6 +13,6 @@ namespace BillingApp.Web.Controllers
             return View();
         }
 
-        // Other actions will be added here
+        
     }
 }

@@ -23,56 +23,48 @@ namespace BillingApp.Web.Controllers
             _context=context;
         }
 
-        // GET: /Subcategory
-        //public async Task<IActionResult> Index()
-        //{
-        //    var subcategories = await _mediator.Send(new GetSubcategoriesQuery());
-        //    return View(subcategories);
-        //}
         public async Task<IActionResult> Index()
         {
             var subcategories = await _mediator.Send(new GetSubcategoriesQuery());
             var categories = await _mediator.Send(new GetCategoriesQuery());
 
-            // Store Category Names in ViewBag as Dictionary
+         
             ViewBag.CategoryMap = categories.ToDictionary(c => c.Id, c => c.Name);
 
             return View(subcategories);
         }
 
-        // GET: /Subcategory/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
+  
         [HttpGet]
         public async Task<IActionResult> Create()
         {
             var categories = await _mediator.Send(new GetCategoriesQuery());
-            ViewBag.Categories = new SelectList(categories, "Id", "Name"); // Populate dropdown
+            ViewBag.Categories = new SelectList(categories, "Id", "Name"); 
 
             return View();
         }
 
-        // POST: /Subcategory/Create
+   
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [HttpPost]
+       
         public async Task<IActionResult> Create(SubcategoryDTO model)
         {
             if (!ModelState.IsValid)
             {
-                // If model is invalid, return to the view with the existing categories
+            
                 var categories = await _mediator.Send(new GetCategoriesQuery());
                 ViewBag.Categories = new SelectList(categories, "Id", "Name");
                 return View(model);
             }
 
-            // Your create logic
+            
             var result = await _mediator.Send(new AddSubcategoryCommand (model));
 
             if (result)
             {
+                TempData["AlertMessage"] = "SubCategory added successfully!";
+                TempData["AlertType"] = "success";
                 _logger.LogInformation($"Subcategory with Name {model.Name} created successfully.");
                 return RedirectToAction("Index");
             }
@@ -81,25 +73,7 @@ namespace BillingApp.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        //public async Task<IActionResult> Create(SubcategoryDTO subcategoryDto)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(subcategoryDto);
-        //    }
-        //    var result = await _mediator.Send(new AddSubcategoryCommand(subcategoryDto));
-
-
-        //    if (result)
-        //    {
-        //        _logger.LogInformation($"Subcategory '{subcategoryDto.Name}' created successfully.");
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //    _logger.LogWarning($"Failed to create subcategory '{subcategoryDto.Name}'.");
-        //    ModelState.AddModelError("", "Failed to create subcategory.");
-        //    return View(subcategoryDto);
-        //}
+   
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -129,6 +103,8 @@ namespace BillingApp.Web.Controllers
 
             if (result)
             {
+                TempData["AlertMessage"] = "SubCategory Edited successfully!";
+                TempData["AlertType"] = "success";
                 _logger.LogInformation($"Subcategory with ID {model.Id} updated successfully.");
                 return RedirectToAction("Index");
             }
@@ -138,56 +114,11 @@ namespace BillingApp.Web.Controllers
         }
 
 
-        //// GET: /Subcategory/Edit/{id}
-        //public async Task<IActionResult> Edit(int id)
-        //{
-        //    var subcategory = await _mediator.Send(new GetSubcategoryByIdQuery { Id = id });
+      
 
-        //    if (subcategory == null)
-        //    {
-        //        _logger.LogWarning($"Subcategory with ID {id} not found.");
-        //        return NotFound();
-        //    }
-
-        //    return View(subcategory);
-        //}
-
-        //// POST: /Subcategory/Edit/{id}
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(SubcategoryDTO subcategoryDto)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(subcategoryDto);
-        //    }
-
-        //    var result = await _mediator.Send(new UpdateSubcategoryCommand { Subcategory = subcategoryDto });
-
-        //    if (result)
-        //    {
-        //        _logger.LogInformation($"Subcategory '{subcategoryDto.Name}' updated successfully.");
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //    _logger.LogWarning($"Failed to update subcategory '{subcategoryDto.Name}'.");
-        //    ModelState.AddModelError("", "Failed to update subcategory.");
-        //    return View(subcategoryDto);
-        //}
-
+       
         [HttpGet]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var subcategory = await _mediator.Send(new GetSubcategoryByIdQuery { Id = id });
-        //    if (subcategory == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(subcategory);
-        //}
-        [HttpGet]
-        [HttpGet]
+    
         public async Task<IActionResult> Delete(int id)
         {
             var subcategory = await _context.Subcategories
@@ -199,16 +130,16 @@ namespace BillingApp.Web.Controllers
                     CategoryName = _context.Categories
                         .Where(c => c.Id == s.CategoryId)
                         .Select(c => c.Name)
-                        .FirstOrDefault() // Fetch CategoryName first before DTO projection
+                        .FirstOrDefault() 
                 })
-                .FirstOrDefaultAsync(); // Call async method before DTO mapping
+                .FirstOrDefaultAsync(); 
 
             if (subcategory == null)
             {
                 return NotFound();
             }
 
-            // Convert to DTO
+          
             var subcategoryDTO = new SubcategoryDTO
             {
                 Id = subcategory.Id,
@@ -228,6 +159,8 @@ namespace BillingApp.Web.Controllers
 
             if (result)
             {
+                TempData["AlertMessage"] = "SubCategory deleted successfully!";
+                TempData["AlertType"] = "success";
                 _logger.LogInformation($"Subcategory with ID {model.Id} deleted successfully.");
                 return RedirectToAction("Index");
             }
@@ -236,36 +169,7 @@ namespace BillingApp.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: /Subcategory/Delete/{id}
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var subcategory = await _mediator.Send(new GetSubcategoryByIdQuery { Id = id });
-
-        //    if (subcategory == null)
-        //    {
-        //        _logger.LogWarning($"Subcategory with ID {id} not found.");
-        //        return NotFound();
-        //    }
-
-        //    return View(subcategory);
-        //}
-
-        //// POST: /Subcategory/Delete/{id}
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var result = await _mediator.Send(new DeleteSubcategoryCommand { Id = id });
-
-        //    if (result)
-        //    {
-        //        _logger.LogInformation($"Subcategory with ID {id} deleted successfully.");
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //    _logger.LogWarning($"Failed to delete subcategory with ID {id}.");
-        //    return RedirectToAction(nameof(Index));
-        //}
+       
     }
 }
 

@@ -10,14 +10,14 @@ using System.Security.Claims;
 
 namespace BillingApp.Handlers.Authentication.Handlers
 {
-    public class LoginUserHandler:IRequestHandler<LoginUserCommand,bool>
+    public class LoginUserHandler : IRequestHandler<LoginUserCommand, bool>
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<LoginUserHandler> _logger;
 
-        public LoginUserHandler(SignInManager<User> signInManager, UserManager<User> userManager,IHttpContextAccessor httpContextAccessor, ILogger<LoginUserHandler> logger)
+        public LoginUserHandler(SignInManager<User> signInManager, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, ILogger<LoginUserHandler> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -57,25 +57,5 @@ namespace BillingApp.Handlers.Authentication.Handlers
             return false;
         }
 
-        //public async Task<bool> Handle(LoginUserCommand request, CancellationToken cancellationToken)
-        //{
-        //    var user = await _userManager.FindByEmailAsync(request.Email);
-        //    if (user != null)
-        //    {
-        //        var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
-        //        if (result.Succeeded)
-        //        {
-        //            var roles = await _userManager.GetRolesAsync(user);
-        //            if (roles.Any())
-        //            {
-        //                _httpContextAccessor.HttpContext.Session.SetString("UserRole", roles.First());
-        //                _logger.LogInformation($"User {user.Email} logged in successfully with role {roles.First()}.");
-        //            }
-        //            return true;
-        //        }
-        //    }
-        //    _logger.LogWarning($"Failed login attempt for email: {request.Email}");
-        //    return false;
-        //}
     }
 }

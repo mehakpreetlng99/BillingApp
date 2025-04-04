@@ -14,8 +14,7 @@ namespace BillingApp.DTO
         [EmailAddress(ErrorMessage = "Invalid email address format.")]
         public string Email { get; set; } = string.Empty;
 
-        //[Required(ErrorMessage = "Password is required.")]
-        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
+        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long, 1 special character and should contain alpha-numeric")]
         public string? Password { get; set; } 
 
         [Required(ErrorMessage = "Role is required.")]

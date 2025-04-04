@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BillingApp.Web.Controllers
 {
 
-    // BillingApp.Web.Controllers/SuperAdminController.cs
+    
 
     [Authorize(Policy = "RequireSuperAdminRole")]
     public class SuperAdminController : Controller
@@ -58,11 +58,14 @@ namespace BillingApp.Web.Controllers
 
         public async Task<IActionResult> RegisterUser(UserDTO model)
         {
-            if (string.IsNullOrEmpty(model.Password))
+            
+            var passwordError = ValidatePassword(model.Password);
+            if (!string.IsNullOrEmpty(passwordError))
             {
-                ModelState.AddModelError("Password", "Password is required.");
+                ModelState.AddModelError("Password", passwordError);
                 return View(model);
             }
+
             if (ModelState.IsValid)
             {
                 var result = await _mediator.Send(new RegisterUserCommand
@@ -71,11 +74,13 @@ namespace BillingApp.Web.Controllers
                     FullName = model.FullName,
                     Email = model.Email,
                     Password = model.Password,
-                    Role = string.IsNullOrEmpty(model.Role) ? "Agent" : model.Role // Default to "Agent" if Role is empty
+                    Role = string.IsNullOrEmpty(model.Role) ? "Agent" : model.Role 
                 });
 
                 if (result)
                 {
+                    TempData["AlertMessage"] = "User Added successfully!";
+                    TempData["AlertType"] = "success";
                     return RedirectToAction("ManageUsers", "SuperAdmin");
                 }
                 else
@@ -85,7 +90,7 @@ namespace BillingApp.Web.Controllers
             }
             else
             {
-                // Log validation errors
+                
                 foreach (var modelState in ModelState.Values)
                 {
                     foreach (var error in modelState.Errors)
@@ -96,6 +101,18 @@ namespace BillingApp.Web.Controllers
             }
 
             return View(model);
+        }
+        private string ValidatePassword(string password)
+        {
+            var specialChars = "!@#$%^&*()_+-=[]{};':\"\\|,.<>/?";
+            if (password.Length < 8 ||
+                !password.Any(char.IsUpper) ||
+                !password.Any(char.IsDigit) ||
+                !password.Any(c => specialChars.Contains(c)))
+            {
+                return "Password must be at least 8 characters, 1 uppercase letter, 1 special character, 1 number";
+            }
+            return null; 
         }
         public async Task<IActionResult> ManageAgents()
         {
@@ -125,56 +142,7 @@ namespace BillingApp.Web.Controllers
             return View(admins);
         }
 
-        //public async Task<IActionResult> RegisterUser(UserDTO model)
-        //{
-        //    if (model == null)
-        //    {
-        //        // Log or handle the null model case
-        //        return BadRequest("Model cannot be null.");
-        //    }
-        //    if (ModelState.IsValid)
-        //    {
-        //        var result = await _mediator.Send(new RegisterUserCommand
-        //        {
-        //            FullName = model.FullName,
-        //            Email = model.Email,
-        //            Password = model.Password,
-        //            Role = model.Role // Assuming role is part of the user registration
-        //        });
-
-        //        if (result)
-        //        {
-        //            return RedirectToAction("ManageUsers", "SuperAdmin"); // Redirect to user management page after success
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError("", "User already exists or invalid data.");
-        //        }
-        //    }
-
-        //    return View(model);
-        //}
-
-        //public async Task<IActionResult> RegisterUser(UserDTO model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var result = await _mediator.Send(new RegisterUserCommand
-        //        {
-        //            FullName = model.FullName,
-        //            Email = model.Email,
-        //            Password = model.Password,
-        //            Role = model.Role
-        //        });
-
-        //        if (result)
-        //            return RedirectToAction("ManageUsers", "SuperAdmin");
-
-        //        ModelState.AddModelError("", "User creation failed.");
-        //    }
-
-        //    return View(model);
-        //}
+        
 
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string userId)
@@ -182,9 +150,13 @@ namespace BillingApp.Web.Controllers
             var result = await _mediator.Send(new DeleteUserCommand(userId));
 
             if (result)
+            {
+                TempData["AlertMessage"] = "User Deleted successfully!";
+                TempData["AlertType"] = "success";
                 return RedirectToAction("ManageUsers", "SuperAdmin");
-
-            ModelState.AddModelError("", "User deletion failed.");
+            }
+            
+                ModelState.AddModelError("", "User deletion failed.");
             return RedirectToAction("ManageUsers", "SuperAdmin");
         }
 
@@ -211,7 +183,11 @@ namespace BillingApp.Web.Controllers
                 });
 
                 if (result)
+                {
+                    TempData["AlertMessage"] = "User updated successfully!";
+                    TempData["AlertType"] = "success";
                     return RedirectToAction("ManageUsers", "SuperAdmin");
+                }
 
                 ModelState.AddModelError("", "User update failed.");
             }
@@ -219,7 +195,6 @@ namespace BillingApp.Web.Controllers
             return View(model);
         }
 
-        // New action for fetching user by ID
         public async Task<IActionResult> GetUserById(string id)
         {
             var user = await _mediator.Send(new GetUserByIdQuery(id));

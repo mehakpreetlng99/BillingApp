@@ -49,6 +49,8 @@ namespace BillingApp.Web.Controllers
             var result = await _mediator.Send(new AddProductCommand(model));
             if (result)
             {
+                TempData["AlertMessage"] = "Product Created successfully!";
+                TempData["AlertType"] = "success";
                 _logger.LogInformation($"Product {model.Name} created successfully.");
                 return RedirectToAction("Index");
             }
@@ -65,6 +67,7 @@ namespace BillingApp.Web.Controllers
                 _logger.LogWarning($"Product with ID {id} not found.");
                 return NotFound();
             }
+           
             var subcategories = await _mediator.Send(new GetSubcategoriesQuery());
             ViewBag.Subcategories = new SelectList(subcategories, "Id", "Name");
             return View(product);
@@ -83,6 +86,8 @@ namespace BillingApp.Web.Controllers
             var result = await _mediator.Send(new UpdateProductCommand(model));
             if (result)
             {
+                TempData["AlertMessage"] = "Product updated successfully!";
+                TempData["AlertType"] = "success";
                 _logger.LogInformation($"Product {model.Name} updated successfully.");
                 return RedirectToAction("Index");
             }
@@ -107,6 +112,8 @@ namespace BillingApp.Web.Controllers
             var result = await _mediator.Send(new DeleteProductCommand(id));
             if (result)
             {
+                TempData["AlertMessage"] = "Product deleted successfully!";
+                TempData["AlertType"] = "success";
                 _logger.LogInformation($"Product with ID {id} deleted successfully.");
                 return RedirectToAction("Index");
             }

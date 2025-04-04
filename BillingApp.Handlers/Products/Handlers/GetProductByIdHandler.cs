@@ -20,7 +20,7 @@ namespace BillingApp.Handlers.Products.Handlers
         {
             var product = await _context.Products
                 .Include(p => p.Subcategory)
-                .ThenInclude(s => s.Category)  // Ensure category data is loaded
+                .ThenInclude(s => s.Category)  
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
             if (product == null)

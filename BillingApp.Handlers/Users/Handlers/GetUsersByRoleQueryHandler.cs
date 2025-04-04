@@ -37,7 +37,7 @@ namespace BillingApp.Handlers.Users.Handlers
             if (requestingUser == null)
                 throw new UnauthorizedAccessException("User not found");
 
-            // Check if user is SuperAdmin
+           
             if (await _userManager.IsInRoleAsync(requestingUser, UserRoles.SuperAdmin))
             {
                 var query = _context.Users.AsQueryable();
@@ -64,10 +64,9 @@ namespace BillingApp.Handlers.Users.Handlers
                 return result;
             }
 
-            // Check if user is Admin
+            
             if (await _userManager.IsInRoleAsync(requestingUser, UserRoles.Admin))
             {
-                // Get agents managed by this admin (via claims)
                 var agentIds = await _context.UserClaims
                     .Where(uc => uc.ClaimType == "ManagedByAdmin" && uc.ClaimValue == requestingUser.Id)
                     .Select(uc => uc.UserId)
@@ -94,7 +93,7 @@ namespace BillingApp.Handlers.Users.Handlers
                 return combinedResults;
             }
 
-            // For Agents, return only themselves
+            
             var selfResult = await _context.Users
                 .Where(u => u.Id == requestingUser.Id)
                 .ProjectTo<UserDTO>(_mapper.ConfigurationProvider)
@@ -111,11 +110,11 @@ namespace BillingApp.Handlers.Users.Handlers
                 var user = await _userManager.FindByIdAsync(userDto.Id);
                 if (user != null)
                 {
-                    // Populate role
+                    
                     var roles = await _userManager.GetRolesAsync(user);
                     userDto.Role = roles.FirstOrDefault();
 
-                    // Populate AdminId for agents
+                    
                     if (userDto.Role == UserRoles.Agent)
                     {
                         var adminClaim = (await _userManager.GetClaimsAsync(user))

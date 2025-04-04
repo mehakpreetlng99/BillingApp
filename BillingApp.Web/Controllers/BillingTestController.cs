@@ -15,28 +15,31 @@ namespace BillingApp.Web.Controllers
         {
             _mediator = mediator;
         }
+        
+
         [HttpGet]
         public async Task<IActionResult> CreateInvoice()
         {
-            var products = await _mediator.Send(new GetAllProductsQuery()); // Fetch products from database
-            ViewBag.Products = products; // Pass products to the view
+           
+            var products = await _mediator.Send(new GetActiveProductsQuery());
+            ViewBag.Products = products;
             return View();
         }
 
 
-        
+
         [HttpPost]
         public async Task<IActionResult> CreateInvoice([FromForm] CreateInvoiceCommand command)
         {
             if (!ModelState.IsValid)
             {
-                // Log validation errors
+                
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
                     Console.WriteLine($"Validation Error: {error.ErrorMessage}");
                 }
 
-                // Create a new InvoiceDTO to return to the view
+                
                 var invoiceDto = new InvoiceDTO
                 {
                     CustomerPhone = command.CustomerPhone,
@@ -45,13 +48,12 @@ namespace BillingApp.Web.Controllers
                     TotalAmount = command.TotalAmount
                 };
 
-                return View(invoiceDto); // Return the form with validation errors
+                return View(invoiceDto); 
             }
 
-            // Call CreateInvoiceHandler via Mediator
+            
             int invoiceId = await _mediator.Send(command);
 
-            // Redirect to Invoice View
             return RedirectToAction("InvoiceDetails", new { id = invoiceId });
         }
         

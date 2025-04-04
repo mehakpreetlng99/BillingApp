@@ -26,7 +26,7 @@ namespace BillingApp.Handlers.Users.Handlers
                 if (existingUser != null)
                 {
                     _logger.LogWarning("User already exists.");
-                    return false; // Prevent duplicate user creation
+                    return false; 
                 }
                 var passwordValidator = _userManager.PasswordValidators.First();
                 var passwordValidationResult = await passwordValidator.ValidateAsync(_userManager, null, request.Password);
@@ -36,7 +36,7 @@ namespace BillingApp.Handlers.Users.Handlers
                     {
                         _logger.LogWarning($"Password validation failed: {error.Description}");
                     }
-                    return false; // Return false to indicate validation failure
+                    return false; 
                 }
 
                 var user = new User
@@ -66,34 +66,7 @@ namespace BillingApp.Handlers.Users.Handlers
         }
 
 
-        //public async Task<bool> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
-        //{
-        //    try
-        //    {
-        //        var user = new User
-        //        {
-        //            UserName = request.Email,
-        //            Email = request.Email,
-        //            FullName = request.FullName
-        //        };
-
-        //        var result = await _userManager.CreateAsync(user, request.Password);
-
-        //        if (result.Succeeded)
-        //        {
-        //            await _userManager.AddToRoleAsync(user, request.Role); 
-        //            _logger.LogInformation("User created successfully.");
-        //            return true;
-        //        }
-
-        //        _logger.LogWarning("User creation failed.");
-        //        return false;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError($"Error in RegisterUserCommandHandler: {ex.Message}");
-        //        throw;
-        //    }
+        
     }
 }
 

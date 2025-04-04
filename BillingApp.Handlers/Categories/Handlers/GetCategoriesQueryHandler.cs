@@ -36,7 +36,7 @@ namespace BillingApp.Handlers.Categories.Handlers
             catch (Exception ex)
             {
                 _logger.LogError($"Error while retrieving categories: {ex.Message}");
-                return new List<Category>(); // Or handle according to your need
+                return new List<Category>(); 
             }
         }
     }

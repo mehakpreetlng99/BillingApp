@@ -1,0 +1,12 @@
+﻿@if (TempData["AlertMessage"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function() {
+            Swal.fire({
+                title: '@Html.Raw(TempData["AlertMessage"])',
+                icon: '@TempData["AlertType"]',
+                confirmButtonText: 'OK'
+            });
+        };
+    </script>
+}

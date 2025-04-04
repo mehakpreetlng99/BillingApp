@@ -31,7 +31,7 @@ namespace BillingApp.Handlers.Categories.Handlers
                 if (category == null)
                 {
                     _logger.LogWarning($"Category with ID {request.Id} not found.");
-                    return null; // Or handle according to your need
+                    return null; 
                 }
 
                 _logger.LogInformation($"Category with ID {request.Id} found: {category.Name}");
@@ -40,7 +40,7 @@ namespace BillingApp.Handlers.Categories.Handlers
             catch (Exception ex)
             {
                 _logger.LogError($"Error while retrieving category with ID {request.Id}: {ex.Message}");
-                return null; // Or handle according to your need
+                return null; 
             }
         }
     }
