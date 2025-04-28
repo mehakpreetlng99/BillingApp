@@ -8,6 +8,7 @@ using BillingApp.Handlers.Products.Queries;
 using System.Collections.Generic;
 using BillingApp.Handlers.Subcategories.Queries;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using BillingApp.Handlers.Categories.Queries;
 
 namespace BillingApp.Web.Controllers
 {
@@ -29,8 +30,9 @@ namespace BillingApp.Web.Controllers
         }
         public async Task<IActionResult> Create()
         {
-            var subcategories = await _mediator.Send(new GetSubcategoriesQuery());
-            ViewBag.Subcategories = new SelectList(subcategories, "Id", "Name");
+            var categories = await _mediator.Send(new GetCategoriesQuery());
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+            ViewBag.Subcategories = new SelectList(Enumerable.Empty<SelectListItem>());
             return View();
         }
 
@@ -41,7 +43,7 @@ namespace BillingApp.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var subcategories = await _mediator.Send(new GetSubcategoriesQuery());
+              var subcategories = await _mediator.Send(new GetSubcategoriesQuery());
                 ViewBag.Subcategories = new SelectList(subcategories, "Id", "Name");
                 return View(model);
             }
@@ -132,5 +134,13 @@ namespace BillingApp.Web.Controllers
             }
             return View(product);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSubcategoriesByCategory(int categoryId)
+        {
+            var subcategories = await _mediator.Send(new GetSubcategoriesByCategoryIdQuery(categoryId));
+            return Json(subcategories);
+        }
+
     }
 }

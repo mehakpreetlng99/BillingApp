@@ -13,11 +13,15 @@
                 </div>
                 <div class="card-body">
                     <form asp-action="EditCategory" method="post">
+                        <!-- Hidden field to keep track of the Category Id -->
+                        <input type="hidden" asp-for="Id" />
+
                         <div class="mb-3">
-                            <label for="Name" class="form-label fw-bold">Category Name</label>
-                            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+                            <label asp-for="Name" class="form-label fw-bold"></label>
+                            <input asp-for="Name" class="form-control" required />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
+
                         <div class="text-center">
                             <button type="submit" class="btn btn-success">
                                 <i class="fas fa-save me-2"></i> Update
@@ -36,6 +40,3 @@
 @section Scripts {
     <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
 }
-
-
-

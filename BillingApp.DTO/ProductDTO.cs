@@ -26,6 +26,8 @@ namespace BillingApp.DTO
 
 
         public string? SubcategoryName { get; set; }
+
+        public int CategoryId { get; set; }
         public string? CategoryName { get; set; }
     }
 

@@ -12,6 +12,7 @@
                 </div>
                 <div class="card-body">
                     <form asp-action="Create" method="post">
+
                         <div class="mb-3">
                             <label asp-for="Name" class="form-label fw-bold">Product Name</label>
                             <input asp-for="Name" class="form-control" />
@@ -31,9 +32,17 @@
                         </div>
 
                         <div class="mb-3">
+                            <label asp-for="CategoryId" class="form-label fw-bold">Category</label>
+                            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control" id="CategoryDropdown">
+                                <option value="">Select a Category</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
                             <label asp-for="SubcategoryId" class="form-label fw-bold">Subcategory</label>
-                            <select asp-for="SubcategoryId" asp-items="ViewBag.Subcategories" class="form-control">
-                                <option value="">Select a subcategory</option>
+                            <select asp-for="SubcategoryId" asp-items="ViewBag.Subcategories" class="form-control" id="SubcategoryDropdown">
+                                <option value="">Select a Subcategory</option>
                             </select>
                             <span asp-validation-for="SubcategoryId" class="text-danger"></span>
                         </div>
@@ -46,6 +55,7 @@
                                 <i class="fas fa-arrow-left me-2"></i> Back to List
                             </a>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -55,6 +65,28 @@
 
 @section Scripts {
     <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#CategoryDropdown').change(function () {
+                var categoryId = $(this).val();
+                $('#SubcategoryDropdown').empty();
+                $('#SubcategoryDropdown').append('<option value="">Loading...</option>');
+
+                if (categoryId) {
+                    $.get('/Product/GetSubcategoriesByCategory', { categoryId: categoryId }, function (data) {
+                        $('#SubcategoryDropdown').empty();
+                        $('#SubcategoryDropdown').append('<option value="">Select a Subcategory</option>');
+                        $.each(data, function (i, subcategory) {
+                            $('#SubcategoryDropdown').append('<option value="' + subcategory.id + '">' + subcategory.name + '</option>');
+                        });
+                    });
+                } else {
+                    $('#SubcategoryDropdown').empty();
+                    $('#SubcategoryDropdown').append('<option value="">Select a Subcategory</option>');
+                }
+            });
+        });
+    </script>
 }
-
-

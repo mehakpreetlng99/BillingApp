@@ -47,13 +47,34 @@ namespace BillingApp.Web.Controllers
             return View(model);
         }
 
-       
-        public IActionResult EditCategory(int id)
+
+        //public IActionResult EditCategory(int id)
+        //{
+        //    return View(new CategoryDTO { Id = id });
+        //}
+        [HttpGet]
+        public async Task<IActionResult> EditCategory(int id)
         {
-            return View(new CategoryDTO { Id = id });
+            var category = await _mediator.Send(new GetCategoryByIdQuery(id));
+
+            if (category == null)
+            {
+                TempData["AlertMessage"] = "Category not found!";
+                TempData["AlertType"] = "error";
+                return RedirectToAction("GetCategories");
+            }
+
+            var model = new CategoryDTO
+            {
+                Id = category.Id,
+                Name = category.Name
+            };
+
+            return View(model);
         }
 
-        
+
+
         [HttpPost]
         public async Task<IActionResult> EditCategory(CategoryDTO model)
         {
