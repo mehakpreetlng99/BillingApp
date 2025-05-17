@@ -26,22 +26,9 @@ stages:
       inputs:
         restoreSolution: '**/*.sln'
 
-    # Use VSBuild to build the project (without packaging)
-    - task: VSBuild@1
-      inputs:
-        solution: '**/*.sln'
-        platform: 'Any CPU'
-        configuration: '$(buildConfiguration)'
+    - script: dotnet publish **/*.csproj -c $(buildConfiguration) -o $(publishDirectory)
+      displayName: 'dotnet publish'
 
-    # Publish the project to a folder
-    - task: VSBuild@1
-      inputs:
-        solution: '**/*.sln'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PublishUrl=$(publishDirectory) /p:Configuration=$(buildConfiguration)'
-        platform: 'Any CPU'
-        configuration: '$(buildConfiguration)'
-
-    # Publish the folder as artifact
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(publishDirectory)'
@@ -69,7 +56,7 @@ stages:
               azureSubscription: '$(azureSubscription)'
               appType: 'webApp'
               appName: '$(appName)'
-              package: '$(System.ArtifactsDirectory)/drop/**'    # Deploy the published folder, not a zip
+              package: '$(System.ArtifactsDirectory)/drop/**'
 
 
 # trigger:
